@@ -14,14 +14,18 @@ const salt= bcrypt.genSaltSync(saltRounds);
 user.signIn= function(data, result){
     connection.query("select * from khach_hang where email=? ", [data.email], (err, results)=>{
         if(err) throw err;
-        const isValidPassword= bcrypt.compareSync(data.password, results[0]['password']);
-        if( isValidPassword){
-          result(results);
+        if(results.length !=0){
+          const isValidPassword= bcrypt.compareSync(data.password, results[0]['password']);
+          if( isValidPassword){
+            result(results);
+          }
+          else{
+            result(false);
+          }
         }
         else{
           result(false);
-        }
-        
+        }  
     });
 }
 user.findUser= function(data, result){
@@ -36,8 +40,8 @@ user.signUp = function(data, result) {
   const passwordHashed= bcrypt.hashSync(data.password, salt);
 
   connection.query(
-    'insert into khach_hang (ho_ten, dia_chi, sdt, email, username, password) value (?, ?, ?, ?, ?, ?) ',
-    [data.ho_ten, data.dia_chi, data.sdt, data.email, data.username, passwordHashed],
+    'insert into khach_hang (ho_ten, dia_chi, sdt, email, password) value (?, ?, ?, ?, ?) ',
+    [data.ho_ten, data.dia_chi, data.sdt, data.email, passwordHashed],
     (err, results) => {
       if(err) throw err;
       result(results);
