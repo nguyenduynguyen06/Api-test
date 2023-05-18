@@ -32,14 +32,14 @@ export const insertHoaDon = async function(req, res) {
     console.log(dataInsert);
     hoa_don.insert(dataInsert, (result) => {
     if (result) {
-        res.send({ message: 'Thêm hoá đơn thành công' });
+        res.status(200).json({success: true,message: 'Thêm hoá đơn thành công' });
     } else {
-        res.send({ message: 'Thêm hoá đơn không thành công' });
+        res.status(404).json({success: false,message: 'Thêm hoá đơn thành công' });
     }
     })
 }
 export const getIdHoaDon = function(req, res){
     hoa_don.getAllIdHoaDon(req.params.id,function(response){
-         res.send(response);
+         res.status(200).json(response);
     });
 }
